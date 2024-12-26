@@ -1,95 +1,134 @@
-# election2024
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+Election2024 Analysis
+This project analyzes the 2024 Indian Lok Sabha Election Results dataset to provide insights into the election outcomes. The analysis includes data cleaning, visualizations, and exploration of key metrics like leading parties, victory margins, and top-performing candidates.
 
-# Input data files are available in the read-only "../input/" directory
-# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
+Project Features
+Data Cleaning:
 
-import os
-for dirname, _, filenames in os.walk('/kaggle/input'):
-    for filename in filenames:
-        print(os.path.join(dirname, filename))
+Handled missing values for candidates and parties.
+Processed inconsistent constituency names for better accuracy.
+Visualizations:
 
-  import matplotlib.pyplot as plt
-import seaborn as sns
-  
-election_df = pd.read_csv('/kaggle/input/india-lok-sabha-election-results-2024/election_results_2024.csv')
-election_df.head()
-election_df.tail()
-election_df.shape
-election_df.describe()
-election_df.describe(include = 'object').transpose()
-election_df.info()
-election_df.isna().sum()
-election_df[election_df.isna().any(axis=1)]
-election_df['Margin'] = pd.to_numeric(election_df['Margin'], errors='coerce')
-election_df = election_df.fillna({'Trailing Candidate': 'N/A', 'Trailing Party': 'N/A', 'Margin': 0})
-election_df[election_df['Constituency']=='Maharajganj']
-election_df.loc[election_df['Constituency']=='Maharajganj', 'Constituency'] = ['Maharajganj(UP)', 'Maharajganj(Bihar)']
-election_df.iloc[332:334]
-plt.figure(figsize = (10,6))
-sns.countplot(data = election_df, x='Leading Party',order=election_df['Leading Party'].value_counts().index)
-plt.title('Number of Constituencies Each Leading Party Leads')
-plt.xticks(rotation = 90)
-plt.show()
-leading_party_counts = election_df['Leading Party'].value_counts()
-leading_party_counts
-others_counts = leading_party_counts[leading_party_counts<3].sum()
-others_counts
-leading_party_counts = leading_party_counts[leading_party_counts>=3]
-leading_party_counts['Others'] = others_counts
+Distribution of leading parties across constituencies.
+Victory margin trends and their distribution.
+Top 20 candidates with the highest and lowest victory margins.
+Data Insights:
 
-plt.figure(figsize=(10, 8))
-wedges, _ = plt.pie(leading_party_counts, labels=None, startangle=140, textprops={'fontsize': 12}, wedgeprops=dict(width=0.7))
+Breakdown of constituencies led by each party.
+Constituencies where victory margins were exceptionally close or large.
+Prerequisites
+To run this project, ensure you have the following installed:
 
-legend_labels = [f'{party} ({count} seats)' for party, count in zip(leading_party_counts.index, leading_party_counts)]
-plt.legend(wedges, legend_labels, title="Leading Party", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
-plt.subplots_adjust(left=0.1, right=0.65)
+Python 3.8 or above
+Required libraries:
+numpy
+pandas
+matplotlib
+seaborn
 
-plt.title('Share of Constituencies Each Leading Party Leads', fontsize=15)
-plt.show()
-plt.figure(figsize=(10, 6))
-sns.histplot(data=election_df, x='Margin', bins=10, kde=True)
-plt.title('Distribution of Victory Margins')
-plt.show()
-top_20_winners = election_df.sort_values(by = 'Margin', ascending = False).head(20)
-from matplotlib.ticker import ScalarFormatter
+Install dependencies using:
+pip install -r requirements.txt
 
-plt.figure(figsize=(12, 8))
-sns.barplot(x='Margin', y='Leading Candidate', data=top_20_winners, hue='Leading Party', dodge=False)
-plt.xlabel('Margin')
-plt.ylabel('Leading Candidate')
-plt.title('Top 20 Candidates with Highest Margin')
-plt.grid(axis='x', linestyle='--', alpha=0.7)
-plt.legend(title='Party', loc='lower right')
+Dataset
+The dataset used in this project is the 2024 Indian Lok Sabha Election Results, available in the /kaggle/input/india-lok-sabha-election-results-2024/election_results_2024.csv.
 
-ax = plt.gca()
-ax.xaxis.set_major_formatter(ScalarFormatter())
+Project Structure
 
-ax.xaxis.get_major_formatter().set_scientific(False)
+Election2024/
+├── election2024.py       # Main analysis script
+├── election_results_2024.csv # Dataset file
+└── README.md             # Project documentation
 
-plt.tight_layout()
-plt.show()
-bottom_20_winners = election_df.sort_values(by = 'Margin', ascending = True).head(20)
-plt.figure(figsize=(12, 8))
-sns.barplot(x='Margin', y='Leading Candidate', data=bottom_20_winners, hue='Leading Party', dodge=False)
-plt.xlabel('Margin')
-plt.ylabel('Leading Candidate')
-plt.title('Top 20 Candidates with Lowest Margin')
-plt.grid(axis='x', linestyle='--', alpha=0.7)
-plt.legend(title='Party', loc='lower right')
 
-ax = plt.gca()
+Key Visualizations
+1. Number of Constituencies Each Party Leads
+A bar plot showing the count of constituencies led by each party.
 
-plt.gca().invert_yaxis()
+2. Share of Constituencies Each Leading Party Leads
+A donut chart showing the percentage of constituencies led by each party with fewer than three constituencies grouped under "Others."
 
-ax.xaxis.set_major_formatter(ScalarFormatter())
-ax.xaxis.get_major_formatter().set_scientific(False)
+3. Distribution of Victory Margins
+A histogram displaying the distribution of victory margins across all constituencies.
 
-plt.tight_layout()
-plt.show()
+4. Top 20 Candidates with Highest Victory Margins
+A bar chart highlighting the candidates with the most significant victory margins.
 
-ax.xaxis.get_major_formatter().set_scientific(False)
+5. Top 20 Candidates with Lowest Victory Margins
+A bar chart showcasing the candidates with the closest victory margins.
 
-plt.show()
+
+Here’s the README.md file formatted for your project:
+
+Election2024 Analysis
+This project analyzes the 2024 Indian Lok Sabha Election Results dataset to provide insights into the election outcomes. The analysis includes data cleaning, visualizations, and exploration of key metrics like leading parties, victory margins, and top-performing candidates.
+
+Project Features
+Data Cleaning:
+
+Handled missing values for candidates and parties.
+Processed inconsistent constituency names for better accuracy.
+Visualizations:
+
+Distribution of leading parties across constituencies.
+Victory margin trends and their distribution.
+Top 20 candidates with the highest and lowest victory margins.
+Data Insights:
+
+Breakdown of constituencies led by each party.
+Constituencies where victory margins were exceptionally close or large.
+Prerequisites
+To run this project, ensure you have the following installed:
+
+Python 3.8 or above
+Required libraries:
+numpy
+pandas
+matplotlib
+seaborn
+Install dependencies using:
+
+bash
+Copy code
+pip install -r requirements.txt
+Dataset
+The dataset used in this project is the 2024 Indian Lok Sabha Election Results, available in the /kaggle/input/india-lok-sabha-election-results-2024/election_results_2024.csv.
+
+Project Structure
+bash
+Copy code
+Election2024/
+├── election2024.py       # Main analysis script
+├── election_results_2024.csv # Dataset file
+└── README.md             # Project documentation
+Key Visualizations
+1. Number of Constituencies Each Party Leads
+A bar plot showing the count of constituencies led by each party.
+
+2. Share of Constituencies Each Leading Party Leads
+A donut chart showing the percentage of constituencies led by each party with fewer than three constituencies grouped under "Others."
+
+3. Distribution of Victory Margins
+A histogram displaying the distribution of victory margins across all constituencies.
+
+4. Top 20 Candidates with Highest Victory Margins
+A bar chart highlighting the candidates with the most significant victory margins.
+
+5. Top 20 Candidates with Lowest Victory Margins
+A bar chart showcasing the candidates with the closest victory margins.
+
+Usage Instructions
+Clone the repository:
+git clone https://github.com/username/Election2024.git
+cd Election2024
+Run the script to analyze the dataset and generate visualizations:
+python election2024.py
+
+Insights Derived
+Party Performance: Visualized the number of constituencies led by each party.
+Victory Margins: Analyzed trends in large and narrow victory margins.
+Top Candidates: Identified leading candidates based on victory margins.
+Contributing
+Contributions are welcome! If you have suggestions or improvements, feel free to fork this repository and create a pull request.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
